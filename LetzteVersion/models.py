@@ -1,6 +1,5 @@
 import torch
 import torch as th
-import util
 
 # --- Model ---
 # Defines simple model by subclassing th.nn.Module

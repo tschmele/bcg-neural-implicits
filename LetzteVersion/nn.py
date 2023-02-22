@@ -7,8 +7,6 @@ from torch.utils.tensorboard import SummaryWriter
 import cv2 as cv
 
 # own modules
-import util
-import draw
 import models
 import dataset
 

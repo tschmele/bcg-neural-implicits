@@ -7,6 +7,8 @@ class CustomImageDataset(Dataset):
         self.samples = np.loadtxt(samples)
         self.distances = np.loadtxt(distances)
         self.samples = self.samples.reshape((len(self.distances), 3))
+        #Oder
+        #self.samples = self.samples.reshape((len(self.samples)/3, 3))
 
     def __len__(self):
         return len(self.distances)
