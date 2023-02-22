@@ -83,8 +83,8 @@ def main():
     if c_mode == 'train':
         # --- Load training data
         # Load MNIST datasets, train and test
-        testtrainingdata = dataset.CustomImageDataset('samples.txt', 'distances.txt')
-        testtrainingdata_test = dataset.CustomImageDataset('samples_test.txt', 'distances_test.txt')
+        testtrainingdata = dataset.CustomImageDataset('../dataset-generation/samples.txt', '../dataset-generation/distances.txt')
+        testtrainingdata_test = dataset.CustomImageDataset('../dataset-generation/samples_test.txt', '../dataset-generation/distances_test.txt')
 
         # Create a dataloader for the training set
         train_loader = th.utils.data.DataLoader(testtrainingdata, batch_size=c_batch_size, shuffle=True)
