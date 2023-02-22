@@ -35,10 +35,10 @@ def calculate_error(nn, sdf, pts: np.array) -> np.array:
 
 
 def generate_err_histogram(error: np.array, save=None):
-    plt.hist(error, histtype='bar')
+    plt.hist(error)
 
     plt.title("Surface Error")
-    plt.xlabel("Error")
+    # plt.xlabel("Error")
     plt.ylabel("Amount")
 
     if save is not None:
@@ -46,14 +46,11 @@ def generate_err_histogram(error: np.array, save=None):
     plt.show()
 
 
-def generate_err_bar_plot(error: np.array, save=None):
+def generate_err_bar_plot(error: np.array, barrier=.0005, step=.00025, limit=.003, save=None):
     error = np.sort(error)
     borders = np.array([])
     bars = np.array([])
     x_axis = np.array([])
-    barrier = .0005
-    step = .00025
-    limit = .0003
 
     for idx, e in np.ndenumerate(error):
         if barrier < limit and e >= barrier:
@@ -93,5 +90,7 @@ if __name__ == '__main__':
     sdf = load_sdf()
     pts = generate_points(100000)
     err = calculate_error(nn, sdf, pts)
-    # generate_abs_err_histogram(err)
-    generate_err_bar_plot(err)
+    generate_err_histogram(err)
+    generate_err_histogram([x for x in err if x <= 0.01])
+    # generate_err_bar_plot(err)
+    generate_err_bar_plot(err, barrier=.00025, step=.00025, limit=.01)
