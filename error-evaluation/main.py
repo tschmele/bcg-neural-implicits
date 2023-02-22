@@ -1,3 +1,4 @@
+import numpy as np
 import torch as th
 from matplotlib import pyplot as plt
 
@@ -90,6 +91,8 @@ if __name__ == '__main__':
     sdf = load_sdf()
     pts = generate_points(100000)
     err = calculate_error(nn, sdf, pts)
+    # avg error ~0.00196
+    # print(f'{i} - average error : {np.average(err)}')
     generate_err_histogram(err)
     generate_err_histogram([x for x in err if x <= 0.01])
     # generate_err_bar_plot(err)
