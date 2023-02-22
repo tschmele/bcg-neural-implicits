@@ -4,7 +4,7 @@ import torch as th
 # --- Model ---
 # Defines simple model by subclassing th.nn.Module
 class SimpleModel(th.nn.Module):
-    # Constructor. Takes the input shape (channels (nist), height, width) and the number of classes
+    # Constructor. Takes the input shape (channels (nist), height, width bzw. X & Y & Z) and the number of classes
     def __init__(self):
         super(SimpleModel, self).__init__()
 
