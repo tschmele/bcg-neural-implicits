@@ -9,7 +9,7 @@ from sdfray.shapes import Sphere
 rng = np.random.default_rng()
 sphere = Sphere()
 
-N = 1000000
+N = 12800
 
 
 def render_sphere(path: str):
@@ -45,10 +45,8 @@ def save_dataset_to_txt(samples: np.array, distances: np.array, out_s: str, out_
 
 
 if __name__ == '__main__':
-    render_sphere('sphere.png')
+    # render_sphere('sphere.png')
 
-    # currently set to 1M samples !
-    # takes some time
     s, d = generate_random_samples(sphere, N)
     save_dataset_to_txt(s, d, 'samples.txt', 'distances.txt')
 
