@@ -1,3 +1,4 @@
+import numpy as np
 import torch as th
 from matplotlib import pyplot as plt
 from models import SimpleModel
@@ -45,14 +46,56 @@ def calculate_error(nn, sdf, pts: np.array) -> np.array:
     return error
 
 
-def generate_plot(error: np.array):
-    error.sort()
+def generate_err_histogram(error: np.array, save=False):
     plt.hist(error, histtype='bar')
 
     plt.title("Error Histogram")
     plt.xlabel("Error")
     plt.ylabel("Amount")
 
+    if save:
+        plt.savefig('histogram.png')
+    plt.show()
+
+
+def generate_err_bar_plot(error: np.array, save=False):
+    error = np.sort(error)
+    borders = np.array([])
+    bars = np.array([])
+    x_axis = np.array([])
+    barrier = .0005
+    step = .0005
+    limit = .0055
+
+    for idx, e in np.ndenumerate(error):
+        if barrier < limit and e >= barrier:
+            borders = np.append(borders, idx[0])
+            x_axis = np.append(x_axis, np.round(barrier, 5))
+            barrier += step
+
+        if barrier >= limit:
+            borders = np.append(borders, len(error))
+            x_axis = np.append(x_axis, 'more')
+            break
+
+    prev = 0
+
+    for b in borders:
+        bars = np.append(bars, b - prev)
+        prev = b
+
+    plt.bar(x_axis, bars)
+
+    plt.title("Error Bar Plot")
+    plt.xlabel("Error", loc='right', labelpad=-35.)
+    plt.ylabel("Amount")
+
+    plt.xticks(rotation='vertical')
+    plt.margins(0.2)
+    plt.subplots_adjust(bottom=0.15)
+
+    if save:
+        plt.savefig('bar-plot.png')
     plt.show()
 
 
@@ -62,5 +105,5 @@ if __name__ == '__main__':
     sdf = load_sdf()
     pts = generate_points(100000)
     err = calculate_error(nn, sdf, pts)
-    generate_plot(err)
-
+    # generate_abs_err_histogram(err)
+    generate_err_bar_plot(err)
