@@ -36,6 +36,7 @@ class SimpleModel(th.nn.Module):
         self.act8 = th.nn.ReLU()
         # output layer
         self.fc9 = th.nn.Linear(32, 1, dtype=torch.float64)
+        self.act9 = th.nn.Tanh()
 
     # The forward function defines the computation in the forward direction. It is called by pytorch and when
     # evaluating the model. The input is simply passed through the layers as defined in the constructor.
@@ -59,6 +60,7 @@ class SimpleModel(th.nn.Module):
         x = self.fc8(x)
         x = self.act8(x)
         x = self.fc9(x)
+        x = self.act9(x)
         x = x.squeeze(-1)
         # Return the output
         return x

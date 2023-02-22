@@ -1,14 +1,11 @@
-import numpy as np
-import torch as th
 import time
-from torchvision import datasets, transforms
+
+import torch as th
 from progress.bar import Bar
 from torch.utils.tensorboard import SummaryWriter
-import cv2 as cv
 
-# own modules
-import models
 import dataset
+import models
 
 # -------- CONFIGURATION --------
 # --- select training ('train') or test ('test') mode
@@ -18,25 +15,13 @@ c_loss_fn = th.nn.L1Loss                                                    # wh
 
 # --- training options
 c_initial_model_path = None                                         # path to initial model, to resume training from. None for training from scratch.            
-c_input_image_shape = (28, 28, 1)                                   # input image shape, depends on dataset (MINST: 28x28x1)
 c_batch_size = 128                                                  # batch size
-c_epochs = 30                                                       # number of epochs to train (number of times the model gets to see all training data)
+c_epochs = 100                                                      # number of epochs to train (number of times the model gets to see all training data)
 c_learning_rate = 0.001                                             # learning rate
 c_loss_report_interval = 50                                         # report loss every n batches
-c_image_augmentation = None # transforms.Compose([                    # optional: use pytorch transforms to augment data, makes model more robust
-#     transforms.RandomAffine(
-#         degrees = (-20, 20),                                        # random rotations in range (-20, 20) degrees
-#         translate = (0.25, 0.25),                                   # random translations in range (-25%, 25%) of image size
-#         scale = (0.5, 1.5),                                         # random scaling in range (0.5, 1.5)
-#         shear = (-10, 10, -10, 10),                                 # random shearing in range (-10, 10) degrees
-#         interpolation = transforms.InterpolationMode.BILINEAR       # interpolation method for image warping
-#     )
-# ])
 
 # --- Evaluation options
 c_test_model_path = 'NN.pth'                                       # path to model snapshot which should be used for testing
-c_window_size = (256, 256)                                          # window size for drawing     
-c_brush_size = 10                                                   # brush size for drawing in pixels
 
 # --- Evaluation callback for drawing
 # Takes an image and the model and returns the class probabilities.
@@ -46,22 +31,6 @@ c_brush_size = 10                                                   # brush size
 # For conversion from and to numpy, the functions 'numpy' and 'from_numpy' can be used.
 # We don't need gradients, so use 'with th.no_grad():' to disable them.
 # To get actual probabilities, apply softmax to the output of the model.
-def on_change_callback(image, model):
-    # Sample image down to input size
-    image = cv.resize(image, (c_input_image_shape[1], c_input_image_shape[0]))
-    # Convert to tensor
-    image = th.from_numpy(image).float()
-    # Add channel dimension
-    image = image.unsqueeze(0)
-    # Add batch dimension
-    image = image.unsqueeze(0)
-    # Pass through model, returns logits
-    with th.no_grad():
-        logits = model(image)
-    # Get class probabilities
-    probs = th.nn.functional.softmax(logits, dim = 1)[0]
-    # Return class probabilities
-    return probs.numpy()
 
 # --- Training step for one batch
 # Performs one training step for a batch of training data, given a model, an optimizer and a loss function.
@@ -248,16 +217,6 @@ def main():
         model.load_state_dict(th.load(c_test_model_path))
         # Enable evaluation mode
         model.eval()
-
-        # callback lambda for image changed event, bind to model
-        image_changed_callback = lambda image : on_change_callback(image, model)
-
-        # Create drawing window
-        dw = draw.DrawWindow("Scribbly McScribbleface", image_changed_callback, 10, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], c_window_size, c_brush_size)
-
-        # Loop until the user closes the window
-        dw.show()
-
 
 # call main function if this file is executed
 if __name__ == "__main__":
