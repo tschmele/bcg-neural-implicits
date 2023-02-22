@@ -82,7 +82,7 @@ def main():
     # --- TRAINING MODE
     if c_mode == 'train':
         # --- Load training data
-        # Load MNIST datasets, train and test
+        # Load dataset, train and test
         testtrainingdata = dataset.CustomImageDataset('../dataset-generation/samples.txt', '../dataset-generation/distances.txt')
         testtrainingdata_test = dataset.CustomImageDataset('../dataset-generation/samples_test.txt', '../dataset-generation/distances_test.txt')
 
