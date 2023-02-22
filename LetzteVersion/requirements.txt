@@ -1,0 +1,9 @@
+numpy
+matplotlib
+pyqt5
+opencv-python
+torch
+torchvision
+torchaudio
+tensorboard
+progress
