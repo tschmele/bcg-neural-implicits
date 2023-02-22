@@ -9,7 +9,7 @@ from sdfray.shapes import Sphere
 rng = np.random.default_rng()
 sphere = Sphere()
 
-N = 12800
+N = 128000
 
 
 def render_sphere(path: str):
