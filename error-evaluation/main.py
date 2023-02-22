@@ -1,23 +1,11 @@
-import numpy as np
 import torch as th
 from matplotlib import pyplot as plt
-from models import SimpleModel
 
+from models import SimpleModel
 from sdfray.shapes import Sphere
 from sdfray.util import *
 
 rng = np.random.default_rng()
-
-# ---
-# load nn
-# load sdf
-# generate eval points
-# for all points
-#   run point through nn
-#   run point through sdf
-#   calculate (squared) difference
-# plot all differences
-# ---
 
 
 def load_nn(path: str):
@@ -46,26 +34,26 @@ def calculate_error(nn, sdf, pts: np.array) -> np.array:
     return error
 
 
-def generate_err_histogram(error: np.array, save=False):
+def generate_err_histogram(error: np.array, save=None):
     plt.hist(error, histtype='bar')
 
-    plt.title("Error Histogram")
+    plt.title("Surface Error")
     plt.xlabel("Error")
     plt.ylabel("Amount")
 
-    if save:
-        plt.savefig('histogram.png')
+    if save is not None:
+        plt.savefig(save)
     plt.show()
 
 
-def generate_err_bar_plot(error: np.array, save=False):
+def generate_err_bar_plot(error: np.array, save=None):
     error = np.sort(error)
     borders = np.array([])
     bars = np.array([])
     x_axis = np.array([])
     barrier = .0005
-    step = .0005
-    limit = .0055
+    step = .00025
+    limit = .0003
 
     for idx, e in np.ndenumerate(error):
         if barrier < limit and e >= barrier:
@@ -86,16 +74,16 @@ def generate_err_bar_plot(error: np.array, save=False):
 
     plt.bar(x_axis, bars)
 
-    plt.title("Error Bar Plot")
-    plt.xlabel("Error", loc='right', labelpad=-35.)
+    plt.title("Surface Error")
+    # plt.xlabel("Error", loc='right', labelpad=-35.)
     plt.ylabel("Amount")
 
     plt.xticks(rotation='vertical')
-    plt.margins(0.2)
+    # plt.margins(0.1)
     plt.subplots_adjust(bottom=0.15)
 
-    if save:
-        plt.savefig('bar-plot.png')
+    if save is not None:
+        plt.savefig(save)
     plt.show()
 
 
