@@ -1,3 +1,4 @@
+import os
 import time
 
 import torch as th
@@ -12,12 +13,15 @@ import models
 c_mode = 'train'
 c_model = models.SimpleModel                                                # which model class to use
 c_loss_fn = th.nn.L1Loss                                                    # which loss function to use
+c_dataset_n = '128k'                                                       # dataset size
+c_storage_path = f'{c_dataset_n}-dataset/'                                  # which folder to save to
+c_dataset_path = f'../dataset-generation/{c_storage_path}'                  # which dataset to use
 
 # --- training options
 c_initial_model_path = None                                         # path to initial model, to resume training from. None for training from scratch.            
 c_batch_size = 128                                                  # batch size
 c_epochs = 100                                                      # number of epochs to train (number of times the model gets to see all training data)
-c_learning_rate = 0.001                                             # learning rate
+c_learning_rate = 0.0001                                            # learning rate
 c_loss_report_interval = 50                                         # report loss every n batches
 
 # --- Evaluation options
@@ -83,8 +87,8 @@ def main():
     if c_mode == 'train':
         # --- Load training data
         # Load dataset, train and test
-        testtrainingdata = dataset.CustomImageDataset('../dataset-generation/samples.txt', '../dataset-generation/distances.txt')
-        testtrainingdata_test = dataset.CustomImageDataset('../dataset-generation/samples_test.txt', '../dataset-generation/distances_test.txt')
+        testtrainingdata = dataset.CustomImageDataset(f'{c_dataset_path}samples.txt', f'{c_dataset_path}distances.txt')
+        testtrainingdata_test = dataset.CustomImageDataset(f'{c_dataset_path}samples_test.txt', f'{c_dataset_path}distances_test.txt')
 
         # Create a dataloader for the training set
         train_loader = th.utils.data.DataLoader(testtrainingdata, batch_size=c_batch_size, shuffle=True)
@@ -105,7 +109,7 @@ def main():
 
         # Define the optimizer (AdamW is a good first choice. Other typical choices are SGD or Adam)
         # We specify which parameters should be optimized (model.parameters()) and the learning rate.
-        optimizer = th.optim.AdamW(model.parameters(), lr=c_learning_rate)
+        optimizer = th.optim.Adam(model.parameters(), lr=c_learning_rate)
 
         # Create tensorboard writer for logging
         writer = SummaryWriter()
@@ -206,7 +210,9 @@ def main():
                 print(f"Validation accuracy: {validation_positives / len(testtrainingdata_test):.4f}")
 
             # Save model snapshot every epoch
-            th.save(model.state_dict(), f"{model.__class__.__name__}_epoch_{epoch + 1}.pth")
+            if not os.path.isdir(c_storage_path):
+                os.makedirs(c_storage_path)
+            th.save(model.state_dict(), f"{c_storage_path}{model.__class__.__name__}_epoch_{epoch + 1}.pth")
 
         # Close tensorboard writer
         writer.close()

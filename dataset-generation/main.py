@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 
 # uses the sdfray library by BenLand100
@@ -9,7 +11,8 @@ from sdfray.shapes import Sphere
 rng = np.random.default_rng()
 sphere = Sphere()
 
-N = 128000
+N = 1000000
+path = f'./{N}-dataset/'
 
 
 def render_sphere(path: str):
@@ -46,7 +49,10 @@ def save_dataset_to_txt(samples: np.array, distances: np.array, out_s: str, out_
 
 if __name__ == '__main__':
     # render_sphere('sphere.png')
+    if not os.path.isdir(path):
+        os.makedirs(path)
 
     s, d = generate_random_samples(sphere, N)
-    save_dataset_to_txt(s, d, 'samples.txt', 'distances.txt')
+    save_dataset_to_txt(s, d, f'{path}samples.txt', f'{path}distances.txt')
+    save_dataset_to_txt(s[:int(3 * (N / 100))], d[:int(N / 100)], f'{path}samples_test.txt', f'{path}distances_test.txt')
 

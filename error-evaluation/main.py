@@ -1,3 +1,6 @@
+import os
+import time
+
 import numpy as np
 import torch as th
 from matplotlib import pyplot as plt
@@ -7,6 +10,12 @@ from sdfray.shapes import Sphere
 from sdfray.util import *
 
 rng = np.random.default_rng()
+
+path = '../neurales-netzwerk/'
+N = '128k'
+test_n = 10000
+dataset = f'{N}-dataset/'
+plt_dir = f'{N}-plots/'
 
 
 def load_nn(path: str):
@@ -35,10 +44,10 @@ def calculate_error(nn, sdf, pts: np.array) -> np.array:
     return error
 
 
-def generate_err_histogram(error: np.array, save=None):
+def generate_err_histogram(error: np.array, title='Surface Error', save=None):
     plt.hist(error)
 
-    plt.title("Surface Error")
+    plt.title(title)
     # plt.xlabel("Error")
     plt.ylabel("Amount")
 
@@ -85,11 +94,47 @@ def generate_err_bar_plot(error: np.array, barrier=.0005, step=.00025, limit=.00
     plt.show()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
+def epoch_comparison(path: str):
+    sdf = load_sdf()
+    pts = generate_points(test_n)
+    avg_err = np.zeros((100, 1))
+    if not os.path.isdir(f'{plt_dir}'):
+        os.makedirs(f'{plt_dir}')
+
+    for i in range(1, 101):
+        print(f'=== epoch {i} in progress ===')
+        t0 = time.time()
+
+        nn = load_nn(f'{path}SimpleModel_epoch_{i}.pth')
+        err = calculate_error(nn, sdf, pts)
+        avg_err[i-1] = np.average(err)
+
+        generate_err_histogram(err, title=f'Epoch {i} Surface Error', save=f'{plt_dir}hist_epoch_{i}.png')
+        generate_err_histogram([x for x in err if x <= .01], title=f'Epoch {i} Surface Error', save=f'{plt_dir}hist_short_epoch_{i}.png')
+
+        t1 = time.time()
+        print(f'\n-> done ! {((t1 - t0) * 1000.0):.2f} ms')
+        print(f'avg error : {avg_err[i-1]}')
+
+    with open(f'{plt_dir}avg_err.txt', 'w') as txt:
+        for i in avg_err:
+            np.savetxt(txt, i)
+
+
+def plot_avg_err(avg_err: np.array):
+    plt.plot(avg_err)
+
+    # plt.title('')
+    plt.ylabel('Average Error')
+    plt.xlabel('Epoch')
+
+    plt.show()
+
+
+def main():
     nn = load_nn('NN.pth')
     sdf = load_sdf()
-    pts = generate_points(100000)
+    pts = generate_points(test_n)
     err = calculate_error(nn, sdf, pts)
     # avg error ~0.00196
     # print(f'{i} - average error : {np.average(err)}')
@@ -97,3 +142,11 @@ if __name__ == '__main__':
     generate_err_histogram([x for x in err if x <= 0.01])
     # generate_err_bar_plot(err)
     generate_err_bar_plot(err, barrier=.00025, step=.00025, limit=.01)
+
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    # main()
+    # epoch_comparison(f'{path}{dataset}')
+    avg_err = np.loadtxt('128k-plots/avg_err.txt')
+    plot_avg_err(avg_err)
