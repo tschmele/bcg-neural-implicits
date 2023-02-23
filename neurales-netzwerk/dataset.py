@@ -1,7 +1,7 @@
 import numpy as np
 from torch.utils.data import Dataset
 
-
+# https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
 class CustomImageDataset(Dataset):
     def __init__(self, samples, distances):
         self.samples = np.loadtxt(samples)
