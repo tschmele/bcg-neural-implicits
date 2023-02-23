@@ -13,13 +13,13 @@ import models
 c_mode = 'train'
 c_model = models.SimpleModel                                                # which model class to use
 c_loss_fn = th.nn.L1Loss                                                    # which loss function to use
-c_dataset_n = '128k'                                                       # dataset size
+c_dataset_n = '1000000'                                                       # dataset size
 c_storage_path = f'{c_dataset_n}-dataset/'                                  # which folder to save to
 c_dataset_path = f'../dataset-generation/{c_storage_path}'                  # which dataset to use
 
 # --- training options
 c_initial_model_path = None                                         # path to initial model, to resume training from. None for training from scratch.            
-c_batch_size = 128                                                  # batch size
+c_batch_size = 1024                                                  # batch size
 c_epochs = 100                                                      # number of epochs to train (number of times the model gets to see all training data)
 c_learning_rate = 0.0001                                            # learning rate
 c_loss_report_interval = 50                                         # report loss every n batches

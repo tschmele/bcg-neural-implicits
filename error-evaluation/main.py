@@ -12,7 +12,7 @@ from sdfray.util import *
 rng = np.random.default_rng()
 
 path = '../neurales-netzwerk/'
-N = '128k'
+N = '1000000'
 test_n = 10000
 dataset = f'{N}-dataset/'
 plt_dir = f'{N}-plots/'
@@ -148,5 +148,5 @@ def main():
 if __name__ == '__main__':
     # main()
     # epoch_comparison(f'{path}{dataset}')
-    avg_err = np.loadtxt('128k-plots/avg_err.txt')
+    avg_err = np.loadtxt(f'{plt_dir}avg_err.txt')
     plot_avg_err(avg_err)
