@@ -124,7 +124,7 @@ def epoch_comparison(path: str):
 def plot_avg_err(avg_err: np.array):
     plt.plot(avg_err)
 
-    # plt.title('')
+    plt.title(f'dataset {N} , lr = .0001')
     plt.ylabel('Average Error')
     plt.xlabel('Epoch')
 
@@ -145,7 +145,7 @@ def main():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    main()
-    epoch_comparison(f'{path}{dataset}')
+    # main()
+    # epoch_comparison(f'{path}{dataset}')
     avg_err = np.loadtxt(f'{plt_dir}avg_err.txt')
     plot_avg_err(avg_err)
