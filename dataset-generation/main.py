@@ -11,7 +11,7 @@ from sdfray.shapes import Sphere
 rng = np.random.default_rng()
 sphere = Sphere()
 
-N = 1000000
+N = 128000
 path = f'./{N}-dataset/'
 
 
@@ -54,5 +54,5 @@ if __name__ == '__main__':
 
     s, d = generate_random_samples(sphere, N)
     save_dataset_to_txt(s, d, f'{path}samples.txt', f'{path}distances.txt')
-    save_dataset_to_txt(s[:int(3 * (N / 100))], d[:int(N / 100)], f'{path}samples_test.txt', f'{path}distances_test.txt')
+    save_dataset_to_txt(s[:int(N / 100)], d[:int(N / 100)], f'{path}samples_test.txt', f'{path}distances_test.txt')
 

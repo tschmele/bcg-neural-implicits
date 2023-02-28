@@ -13,7 +13,7 @@ import models
 c_mode = 'train'
 c_model = models.SimpleModel                                                # which model class to use
 c_loss_fn = th.nn.L1Loss                                                    # which loss function to use
-c_dataset_n = '1000000'                                                       # dataset size
+c_dataset_n = '128k'                                                       # dataset size
 c_storage_path = f'{c_dataset_n}-dataset/'                                  # which folder to save to
 c_dataset_path = f'../dataset-generation/{c_storage_path}'                  # which dataset to use
 

@@ -12,7 +12,7 @@ from sdfray.util import *
 rng = np.random.default_rng()
 
 path = '../neurales-netzwerk/'
-N = '1000000'
+N = '128k'
 test_n = 10000
 dataset = f'{N}-dataset/'
 plt_dir = f'{N}-plots/'
@@ -136,8 +136,7 @@ def main():
     sdf = load_sdf()
     pts = generate_points(test_n)
     err = calculate_error(nn, sdf, pts)
-    # avg error ~0.00196
-    # print(f'{i} - average error : {np.average(err)}')
+
     generate_err_histogram(err)
     generate_err_histogram([x for x in err if x <= 0.01])
     # generate_err_bar_plot(err)
@@ -146,7 +145,7 @@ def main():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # main()
-    # epoch_comparison(f'{path}{dataset}')
+    main()
+    epoch_comparison(f'{path}{dataset}')
     avg_err = np.loadtxt(f'{plt_dir}avg_err.txt')
     plot_avg_err(avg_err)
